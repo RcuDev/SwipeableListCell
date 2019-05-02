@@ -6,9 +6,14 @@
 package com.rcudev.swipeablelistcell
 
 import android.content.Context
+import android.support.annotation.*
+import android.support.annotation.IntRange
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import kotlinx.android.synthetic.main.swipeable_list_cell.view.*
 
 class SwipeableListCell @JvmOverloads constructor(
     context: Context,
@@ -16,8 +21,94 @@ class SwipeableListCell @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    val NUM_BUTTONS_ONE: Int = 1
+    val NUM_BUTTONS_TWO: Int = 2
+    val NUM_BUTTONS_THREE: Int = 3
+
+    private var mButtonClickListener: OnButtonClickListener? = null
+    private var mCellIndex: Int = 0
+    private var mNumOfButtons: Int = 0
+    private var mSwipeDistance: Float = 0.0f
+    private var mAnimDuration: Long = 0
+
     init {
         LayoutInflater.from(context).inflate(R.layout.swipeable_list_cell, this, true)
     }
 
+    fun initializeComponent(
+        @NonNull cellIndex: Int, @IntRange(from = 1, to = 3) numOfButtons: Int, @NonNull animDuration: Int,
+        @NonNull listener: OnButtonClickListener
+    ) {
+        this.mCellIndex = cellIndex
+        this.mNumOfButtons = numOfButtons
+        this.mButtonClickListener = listener
+        setButtonConfiguration()
+        setListeners()
+    }
+
+    fun setButtonOneValues(@Nullable @ColorRes backgroundColor: Int, @NonNull text: String, @Nullable @ColorRes textColor: Int) {
+        setButtonValues(button_one, button_one_text, backgroundColor, text, textColor)
+    }
+
+    fun setButtonTwoValues(@Nullable @ColorRes backgroundColor: Int, @NonNull text: String, @Nullable @ColorRes textColor: Int) {
+        setButtonValues(button_two, button_two_text, backgroundColor, text, textColor)
+    }
+
+    fun setButtonThreeValues(@Nullable @ColorRes backgroundColor: Int, @NonNull text: String, @Nullable @ColorRes textColor: Int) {
+        setButtonValues(button_three, button_three_text, backgroundColor, text, textColor)
+    }
+
+    fun setSwipeableCell(@LayoutRes swipeableCell: Int): View {
+        view_stub.layoutResource = swipeableCell
+        return view_stub.inflate()
+    }
+
+    private fun setButtonValues(
+        button: ConstraintLayout,
+        textView: TextView,
+        backgroundColor: Int,
+        text: String,
+        textColor: Int
+    ) {
+        button.setBackgroundColor(backgroundColor)
+        textView.text = text
+        textView.setTextColor(textColor)
+    }
+
+    private fun setListeners() {
+        button_one.setOnClickListener {
+            mButtonClickListener?.onButtonClickListener(mCellIndex, button_one_text.text.toString())
+        }
+
+        button_two.setOnClickListener {
+            mButtonClickListener?.onButtonClickListener(mCellIndex, button_two_text.text.toString())
+        }
+
+        button_three.setOnClickListener {
+            mButtonClickListener?.onButtonClickListener(mCellIndex, button_three_text.text.toString())
+        }
+
+        swipeable_view.setOnTouchListener(SwipeableTouchListener(this, swipeable_view, mSwipeDistance, mAnimDuration))
+    }
+
+    private fun setButtonConfiguration() {
+        when(mNumOfButtons) {
+            NUM_BUTTONS_ONE -> {
+                button_two.visibility = View.GONE
+                button_three.visibility = View.GONE
+                mSwipeDistance = 90.0f
+            }
+            NUM_BUTTONS_TWO -> {
+                button_three.visibility = View.GONE
+                mSwipeDistance = 180.0f
+            }
+            NUM_BUTTONS_THREE -> {
+                mSwipeDistance = 270.0f
+            }
+        }
+    }
+
+    interface OnButtonClickListener {
+        fun onButtonClickListener(cellIndex: Int, buttonClicked: String)
+    }
 }
