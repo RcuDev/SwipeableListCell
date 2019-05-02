@@ -1,3 +1,8 @@
+/*
+ * Developed by Raul Corvo (recu.developer@gmail.com)
+ * Copyright (c) 2019. All rights reserved
+ */
+
 package com.rcudev.sampleactivity
 
 import android.support.v7.app.AppCompatActivity

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Developed by Raul Corvo (recu.developer@gmail.com)
+  ~ Copyright (c) 2019. All rights reserved
+  -->
+
+<resources>
+
+    <!--SWIPEABLE ITEM LIST-->
+    <color name="button_default_background">@android:color/holo_blue_dark</color>
+    <color name="button_text_black">@android:color/black</color>
+    <color name="button_text_white">@android:color/white</color>
+
+</resources>
