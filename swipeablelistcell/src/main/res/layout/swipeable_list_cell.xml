@@ -3,97 +3,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/buttons_container"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/button_one"
+        android:layout_width="@dimen/button_height"
+        android:layout_height="0dp"
+        android:background="@color/button_default_background"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/button_one"
-            android:layout_width="@dimen/button_height"
-            android:layout_height="match_parent"
-            android:background="@color/button_default_background"
+        <TextView
+            android:id="@+id/button_one_text"
+            style="@style/ButtonText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="One" />
 
-            <TextView
-                android:id="@+id/button_one_text"
-                style="@style/ButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="One" />
+    </RelativeLayout>
 
-        </android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/button_two"
+        android:layout_width="@dimen/button_height"
+        android:layout_height="0dp"
+        android:background="@color/button_default_background"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_one"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/button_two"
-            android:layout_width="@dimen/button_height"
-            android:layout_height="match_parent"
-            android:background="@color/button_default_background"
+        <TextView
+            android:id="@+id/button_two_text"
+            style="@style/ButtonText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_one"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Two" />
 
-            <TextView
-                android:id="@+id/button_two_text"
-                style="@style/ButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Two" />
+    </RelativeLayout>
 
-        </android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/button_three"
+        android:layout_width="@dimen/button_height"
+        android:layout_height="0dp"
+        android:background="@color/button_default_background"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_two"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/button_three"
-            android:layout_width="@dimen/button_height"
-            android:layout_height="match_parent"
-            android:background="@color/button_default_background"
+        <TextView
+            android:id="@+id/button_three_text"
+            style="@style/ButtonText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_two"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Three" />
 
-            <TextView
-                android:id="@+id/button_three_text"
-                style="@style/ButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Three" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/swipeable_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ViewStub
-            android:id="@+id/view_stub"
+            android:id="@+id/view_stub_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

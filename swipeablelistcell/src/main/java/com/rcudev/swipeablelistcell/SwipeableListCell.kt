@@ -9,6 +9,7 @@ import android.content.Context
 import android.support.annotation.*
 import android.support.annotation.IntRange
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +17,14 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.swipeable_list_cell.view.*
 
 class SwipeableListCell @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    val NUM_BUTTONS_ONE: Int = 1
-    val NUM_BUTTONS_TWO: Int = 2
-    val NUM_BUTTONS_THREE: Int = 3
+    private val NUM_BUTTONS_ONE: Int = 1
+    private val NUM_BUTTONS_TWO: Int = 2
+    private val NUM_BUTTONS_THREE: Int = 3
 
     private var mButtonClickListener: OnButtonClickListener? = null
     private var mCellIndex: Int = 0
@@ -32,15 +33,16 @@ class SwipeableListCell @JvmOverloads constructor(
     private var mAnimDuration: Long = 0
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.swipeable_list_cell, this, true)
+        LayoutInflater.from(context).inflate(R.layout.swipeable_list_cell, this)
     }
 
     fun initializeComponent(
-        @NonNull cellIndex: Int, @IntRange(from = 1, to = 3) numOfButtons: Int, @NonNull animDuration: Int,
-        @NonNull listener: OnButtonClickListener
+            @NonNull cellIndex: Int, @IntRange(from = 1, to = 3) numOfButtons: Int, @NonNull animDuration: Long,
+            @NonNull listener: OnButtonClickListener
     ) {
         this.mCellIndex = cellIndex
         this.mNumOfButtons = numOfButtons
+        this.mAnimDuration = animDuration
         this.mButtonClickListener = listener
         setButtonConfiguration()
         setListeners()
@@ -59,20 +61,20 @@ class SwipeableListCell @JvmOverloads constructor(
     }
 
     fun setSwipeableCell(@LayoutRes swipeableCell: Int): View {
-        view_stub.layoutResource = swipeableCell
-        return view_stub.inflate()
+        view_stub_layout.layoutResource = swipeableCell
+        return view_stub_layout.inflate()
     }
 
     private fun setButtonValues(
-        button: ConstraintLayout,
-        textView: TextView,
-        backgroundColor: Int,
-        text: String,
-        textColor: Int
+            button: View,
+            textView: TextView,
+            backgroundColor: Int,
+            text: String,
+            textColor: Int
     ) {
-        button.setBackgroundColor(backgroundColor)
+        button.setBackgroundColor(ContextCompat.getColor(this.context, backgroundColor))
         textView.text = text
-        textView.setTextColor(textColor)
+        textView.setTextColor(ContextCompat.getColor(this.context, textColor))
     }
 
     private fun setListeners() {
@@ -92,7 +94,7 @@ class SwipeableListCell @JvmOverloads constructor(
     }
 
     private fun setButtonConfiguration() {
-        when(mNumOfButtons) {
+        when (mNumOfButtons) {
             NUM_BUTTONS_ONE -> {
                 button_two.visibility = View.GONE
                 button_three.visibility = View.GONE
