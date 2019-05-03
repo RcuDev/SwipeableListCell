@@ -5,43 +5,36 @@
 
 package com.rcudev.swipeablelistcell
 
-import android.content.res.Resources
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 
 class SwipeableTouchListener(
-    swipeableListCell: SwipeableListCell,
-    swipeableView: View,
-    swipeDistance: Float,
-    swipeDuration: Long
+    val swipeableListCell: SwipeableListCell,
+    val swipeableView: View,
+    val swipeDistance: Float,
+    val swipeDuration: Long
 ) : View.OnTouchListener {
 
     private val POSITION_0: Float = 0.0f
 
     private val mGestureDetector = GestureDetector(GestureListener())
-    private val mSwipeableListCell: SwipeableListCell = swipeableListCell
-    private var mSwipeableView: View = swipeableView
-    private var mSwipeDistnace: Float = swipeDistance
-    private var mSwipeDuration: Long = swipeDuration
 
     private var mRightToLeft: Boolean = true
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_UP) {
-            mSwipeableListCell.requestDisallowInterceptTouchEvent(true)
+            swipeableListCell.requestDisallowInterceptTouchEvent(true)
             if (mRightToLeft) {
-                mSwipeableView.animate().translationX(mSwipeDistnace.toPx() * -1)
-                    .setDuration(mSwipeDuration).start()
+                swipeableView.animate().translationX(swipeDistance.toPx() * -1)
+                    .setDuration(swipeDuration).start()
             } else {
-                mSwipeableView.animate().translationX(POSITION_0).setDuration(mSwipeDuration)
+                swipeableView.animate().translationX(POSITION_0).setDuration(swipeDuration)
                     .start()
             }
         }
         return mGestureDetector.onTouchEvent(event)
     }
-
-    private fun Float.toPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
@@ -52,7 +45,7 @@ class SwipeableTouchListener(
             distanceY: Float
         ): Boolean {
             if (e1.action == MotionEvent.ACTION_DOWN) {
-                mSwipeableListCell.requestDisallowInterceptTouchEvent(true)
+                swipeableListCell.requestDisallowInterceptTouchEvent(true)
             }
 
             if (e1.x > e2.x) {
