@@ -12,7 +12,6 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.swipeable_list_cell.view.*
@@ -23,12 +22,15 @@ class SwipeableListCell @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    private val DISTANCE_ONE: Float = 90.0f
+    private val DISTANCE_TWO: Float = 180.0f
+    private val DISTANCE_THREE: Float = 270.0f
     private val NUM_BUTTONS_ONE: Int = 1
     private val NUM_BUTTONS_TWO: Int = 2
     private val NUM_BUTTONS_THREE: Int = 3
     private val POSITION_0: Float = 0.0f
 
-    private var mButtonClickListener: OnButtonClickListener? = null
+    private var mSwipeableCellListeners: SwipeableCellListeners? = null
     private var mCellIndex: Int = 0
     private var mNumOfButtons: Int = 0
     private var mSwipeDistance: Float = 0.0f
@@ -43,12 +45,12 @@ class SwipeableListCell @JvmOverloads constructor(
             from = 1,
             to = 3
         ) numOfButtons: Int, @NonNull animDuration: Long,
-        @NonNull listener: OnButtonClickListener
+        @NonNull listener: SwipeableCellListeners
     ) {
         this.mCellIndex = cellIndex
         this.mNumOfButtons = numOfButtons
         this.mAnimDuration = animDuration
-        this.mButtonClickListener = listener
+        this.mSwipeableCellListeners = listener
         setButtonConfiguration()
         setListeners()
     }
@@ -85,30 +87,34 @@ class SwipeableListCell @JvmOverloads constructor(
     private fun setListeners() {
         button_one.setOnClickListener {
             swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
-            mButtonClickListener?.onButtonClickListener(mCellIndex, button_one_text.text.toString())
+            mSwipeableCellListeners?.onButtonClickListener(
+                mCellIndex,
+                button_one_text.text.toString()
+            )
         }
 
         button_two.setOnClickListener {
             swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
-            mButtonClickListener?.onButtonClickListener(mCellIndex, button_two_text.text.toString())
+            mSwipeableCellListeners?.onButtonClickListener(
+                mCellIndex,
+                button_two_text.text.toString()
+            )
         }
 
         button_three.setOnClickListener {
             swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
-            mButtonClickListener?.onButtonClickListener(
+            mSwipeableCellListeners?.onButtonClickListener(
                 mCellIndex,
                 button_three_text.text.toString()
             )
         }
 
-        swipeable_view.setOnTouchListener(
-            SwipeableTouchListener(
-                this,
-                swipeable_view,
-                mSwipeDistance,
-                mAnimDuration
-            )
-        )
+        swipeable_view.setOnTouchListener(object :
+            SwipeableTouchListener(this, swipeable_view, mSwipeDistance, mAnimDuration) {
+            override fun onSwipeableCellClickListener() {
+                mSwipeableCellListeners?.onCellClickListenr(mCellIndex)
+            }
+        })
     }
 
     private fun setButtonConfiguration() {
@@ -116,19 +122,18 @@ class SwipeableListCell @JvmOverloads constructor(
             NUM_BUTTONS_ONE -> {
                 button_two.visibility = View.GONE
                 button_three.visibility = View.GONE
-                mSwipeDistance = 90.0f
+                mSwipeDistance = DISTANCE_ONE
             }
             NUM_BUTTONS_TWO -> {
                 button_three.visibility = View.GONE
-                mSwipeDistance = 180.0f
+                mSwipeDistance = DISTANCE_TWO
             }
-            NUM_BUTTONS_THREE -> {
-                mSwipeDistance = 270.0f
-            }
+            NUM_BUTTONS_THREE -> mSwipeDistance = DISTANCE_THREE
         }
     }
 
-    interface OnButtonClickListener {
+    interface SwipeableCellListeners {
+        fun onCellClickListenr(cellIndex: Int)
         fun onButtonClickListener(cellIndex: Int, buttonClicked: String)
     }
 }

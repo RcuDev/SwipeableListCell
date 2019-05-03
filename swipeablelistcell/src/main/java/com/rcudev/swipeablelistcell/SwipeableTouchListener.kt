@@ -5,36 +5,59 @@
 
 package com.rcudev.swipeablelistcell
 
+import android.support.v7.widget.RecyclerView
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import kotlinx.android.synthetic.main.swipeable_list_cell.view.*
 
-class SwipeableTouchListener(
+open class SwipeableTouchListener(
     val swipeableListCell: SwipeableListCell,
     val swipeableView: View,
     val swipeDistance: Float,
     val swipeDuration: Long
 ) : View.OnTouchListener {
 
+    private val NEGATIVE_VALUE: Int = -1
     private val POSITION_0: Float = 0.0f
+    private val MIN_SCROLL: Float = 150.0f
 
     private val mGestureDetector = GestureDetector(GestureListener())
 
-    private var mRightToLeft: Boolean = true
+    private var mRightToLeft: Boolean = false
+    private var mLeftToRight: Boolean = false
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_UP) {
-            swipeableListCell.requestDisallowInterceptTouchEvent(true)
-            if (mRightToLeft) {
-                swipeableView.animate().translationX(swipeDistance.toPx() * -1)
-                    .setDuration(swipeDuration).start()
-            } else {
-                swipeableView.animate().translationX(POSITION_0).setDuration(swipeDuration)
+            when {
+                mRightToLeft -> {
+                    if (swipeableListCell.parent is RecyclerView) {
+                        val parent: RecyclerView = swipeableListCell.parent as RecyclerView
+                        for (index in 0 until parent.childCount) {
+                            val child: SwipeableListCell =
+                                parent.getChildAt(index) as SwipeableListCell
+                            child.swipeable_view.animate().translationX(POSITION_0)
+                                .setDuration(swipeDuration)
+                                .start()
+                        }
+                    }
+                    swipeableView.animate().translationX(swipeDistance.toPx() * NEGATIVE_VALUE)
+                        .setDuration(swipeDuration).start()
+                }
+                mLeftToRight -> swipeableView.animate().translationX(POSITION_0).setDuration(
+                    swipeDuration
+                )
                     .start()
+                else -> v.performClick()
             }
+
+            mRightToLeft = false
+            mLeftToRight = false
         }
         return mGestureDetector.onTouchEvent(event)
     }
+
+    open fun onSwipeableCellClickListener() {}
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
@@ -48,13 +71,19 @@ class SwipeableTouchListener(
                 swipeableListCell.requestDisallowInterceptTouchEvent(true)
             }
 
-            if (e1.x > e2.x) {
+            if (e1.x > e2.x + MIN_SCROLL) {
                 mRightToLeft = true
-            } else if (e1.x < e2.x) {
-                mRightToLeft = false
+            } else if (e1.x < e2.x - MIN_SCROLL) {
+                mLeftToRight = true
             }
 
+            return false
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            onSwipeableCellClickListener()
             return true
         }
+
     }
 }

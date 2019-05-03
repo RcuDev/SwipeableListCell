@@ -18,7 +18,7 @@ class RecyclerViewAdapter(
     val context: Context,
     val items: ArrayList<String>,
     val listener: OnClickListener
-) : RecyclerView.Adapter<ViewHolder>(), SwipeableListCell.OnButtonClickListener {
+) : RecyclerView.Adapter<ViewHolder>(), SwipeableListCell.SwipeableCellListeners {
 
     // Inflates the item view
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
@@ -35,13 +35,10 @@ class RecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val anyCell: View = holder.swipeableListCell.setSwipeableCell(R.layout.any_cell)
         anyCell.item_text.text = items[position]
-//        anyCell.setOnClickListener {
-//            listener.onCellClickListenr(position)
-//        }
 
         when (items[position]) {
             context.getString(R.string.one_button) -> {
-                holder.swipeableListCell.initializeComponent(2, 1, 500, this)
+                holder.swipeableListCell.initializeComponent(position, 1, 500, this)
                 holder.swipeableListCell.setButtonOneValues(
                     android.R.color.holo_blue_dark,
                     "Add",
@@ -49,7 +46,7 @@ class RecyclerViewAdapter(
                 )
             }
             context.getString(R.string.two_button) -> {
-                holder.swipeableListCell.initializeComponent(2, 2, 500, this)
+                holder.swipeableListCell.initializeComponent(position, 2, 500, this)
                 holder.swipeableListCell.setButtonOneValues(
                     android.R.color.holo_blue_dark,
                     "Add",
@@ -62,7 +59,7 @@ class RecyclerViewAdapter(
                 )
             }
             context.getString(R.string.three_button) -> {
-                holder.swipeableListCell.initializeComponent(2, 3, 500, this)
+                holder.swipeableListCell.initializeComponent(position, 3, 500, this)
                 holder.swipeableListCell.setButtonOneValues(
                     android.R.color.holo_blue_dark,
                     "Add",
@@ -85,6 +82,10 @@ class RecyclerViewAdapter(
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    override fun onCellClickListenr(cellIndex: Int) {
+        listener.onCellClickListenr(cellIndex)
     }
 
     override fun onButtonClickListener(cellIndex: Int, buttonClicked: String) {
