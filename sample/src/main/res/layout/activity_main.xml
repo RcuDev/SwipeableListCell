@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.rcudev.swipeablelistcell.SwipeableListCell
-        android:id="@+id/swipeable_component"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/swipeable_list_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

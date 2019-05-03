@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SampleActivity</string>
+
+    <string name="one_button">Item with one button</string>
+    <string name="two_button">Item with two buttons</string>
+    <string name="three_button">Item with three buttons</string>
 </resources>

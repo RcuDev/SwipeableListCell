@@ -12,19 +12,21 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.swipeable_list_cell.view.*
 
 class SwipeableListCell @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val NUM_BUTTONS_ONE: Int = 1
     private val NUM_BUTTONS_TWO: Int = 2
     private val NUM_BUTTONS_THREE: Int = 3
+    private val POSITION_0: Float = 0.0f
 
     private var mButtonClickListener: OnButtonClickListener? = null
     private var mCellIndex: Int = 0
@@ -37,8 +39,11 @@ class SwipeableListCell @JvmOverloads constructor(
     }
 
     fun initializeComponent(
-            @NonNull cellIndex: Int, @IntRange(from = 1, to = 3) numOfButtons: Int, @NonNull animDuration: Long,
-            @NonNull listener: OnButtonClickListener
+        @NonNull cellIndex: Int, @IntRange(
+            from = 1,
+            to = 3
+        ) numOfButtons: Int, @NonNull animDuration: Long,
+        @NonNull listener: OnButtonClickListener
     ) {
         this.mCellIndex = cellIndex
         this.mNumOfButtons = numOfButtons
@@ -66,11 +71,11 @@ class SwipeableListCell @JvmOverloads constructor(
     }
 
     private fun setButtonValues(
-            button: View,
-            textView: TextView,
-            backgroundColor: Int,
-            text: String,
-            textColor: Int
+        button: View,
+        textView: TextView,
+        backgroundColor: Int,
+        text: String,
+        textColor: Int
     ) {
         button.setBackgroundColor(ContextCompat.getColor(this.context, backgroundColor))
         textView.text = text
@@ -79,18 +84,31 @@ class SwipeableListCell @JvmOverloads constructor(
 
     private fun setListeners() {
         button_one.setOnClickListener {
+            swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
             mButtonClickListener?.onButtonClickListener(mCellIndex, button_one_text.text.toString())
         }
 
         button_two.setOnClickListener {
+            swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
             mButtonClickListener?.onButtonClickListener(mCellIndex, button_two_text.text.toString())
         }
 
         button_three.setOnClickListener {
-            mButtonClickListener?.onButtonClickListener(mCellIndex, button_three_text.text.toString())
+            swipeable_view.animate().translationX(POSITION_0).setDuration(mAnimDuration).start()
+            mButtonClickListener?.onButtonClickListener(
+                mCellIndex,
+                button_three_text.text.toString()
+            )
         }
 
-        swipeable_view.setOnTouchListener(SwipeableTouchListener(this, swipeable_view, mSwipeDistance, mAnimDuration))
+        swipeable_view.setOnTouchListener(
+            SwipeableTouchListener(
+                this,
+                swipeable_view,
+                mSwipeDistance,
+                mAnimDuration
+            )
+        )
     }
 
     private fun setButtonConfiguration() {
